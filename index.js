@@ -52,6 +52,27 @@ app.delete("/todo-delete", (req, res) => {
   });
 });
 
+app.patch("/todo-edit", (req, res) => {
+  const editTodoId = req.query.id;
+  const editTodoText = req.query.todo;
+  fs.readFile(path, "utf-8", (err, data) => {
+    if (err) {
+      console.log("err", err);
+    } else {
+      const jsonArray = JSON.parse(data);
+      const currItem = jsonArray.find((item) => item.id == editTodoId);
+      currItem.description = editTodoText;
+      fs.writeFile(path, JSON.stringify(jsonArray, null, 2), (err) => {
+        if (err) {
+          console.log("err", err);
+        } else {
+          res.send("Todo edited successfully");
+        }
+      });
+    }
+  });
+});
+
 app.listen(3000, () => {
   console.log("The server is up and running on port 3000");
 });
